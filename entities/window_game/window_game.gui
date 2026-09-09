@@ -1,0 +1,236 @@
+fonts {
+  name: "default"
+  font: "/builtins/fonts/default.font"
+}
+fonts {
+  name: "font_new"
+  font: "/entities/window_game/assets/font_new.font"
+}
+fonts {
+  name: "druid_text_bold"
+  font: "/druid/fonts/druid_text_bold.font"
+}
+textures {
+  name: "druid"
+  texture: "/druid/druid.atlas"
+}
+textures {
+  name: "texture-ui"
+  texture: "/entities/window_game/assets/texture-ui.atlas"
+}
+textures {
+  name: "bg-game"
+  texture: "/entities/window_game/assets/bg-game.atlas"
+}
+nodes {
+  position {
+    x: 480.0
+    y: 322.0
+  }
+  size {
+    x: 960.0
+    y: 640.0
+  }
+  type: TYPE_BOX
+  id: "root"
+  adjust_mode: ADJUST_MODE_STRETCH
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    y: 1.0
+  }
+  size {
+    x: 300.0
+    y: 500.0
+  }
+  type: TYPE_BOX
+  texture: "druid/ui_circle_64"
+  id: "box1"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 32.0
+    y: 32.0
+    z: 32.0
+    w: 32.0
+  }
+  clipping_mode: CLIPPING_MODE_STENCIL
+}
+nodes {
+  position {
+    y: 252.0
+  }
+  size {
+    x: 300.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "header"
+  parent: "root"
+  inherit_alpha: true
+  clipping_mode: CLIPPING_MODE_STENCIL
+  clipping_visible: false
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: -50.0
+  }
+  size {
+    x: 300.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+  }
+  type: TYPE_BOX
+  texture: "druid/ui_circle_64"
+  id: "bg_header"
+  parent: "header"
+  inherit_alpha: true
+  slice9 {
+    x: 32.0
+    y: 32.0
+    z: 32.0
+    w: 32.0
+  }
+}
+nodes {
+  position {
+    y: -25.0
+  }
+  size {
+    x: 250.0
+    y: 50.0
+  }
+  type: TYPE_TEXT
+  text: "Plinko"
+  font: "druid_text_bold"
+  id: "text"
+  parent: "header"
+  inherit_alpha: true
+  outline_alpha: 0.0
+  shadow_alpha: 0.0
+  text_tracking: -0.05
+}
+nodes {
+  position {
+    x: -75.0
+    y: -191.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 150.0
+    y: 84.0
+  }
+  type: TYPE_BOX
+  texture: "texture-ui/btn_green_normal"
+  id: "box"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 40.0
+    y: 10.0
+    z: 40.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: 1.0
+    y: -191.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 150.0
+    y: 84.0
+  }
+  type: TYPE_BOX
+  texture: "texture-ui/btn_green_normal"
+  id: "box2"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 40.0
+    y: 10.0
+    z: 40.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: 76.0
+    y: -191.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 150.0
+    y: 84.0
+  }
+  type: TYPE_BOX
+  texture: "texture-ui/btn_green_normal"
+  id: "box3"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 40.0
+    y: 10.0
+    z: 40.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    y: 11.0
+  }
+  size {
+    x: 250.0
+    y: 350.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  texture: "druid/ui_circle_64"
+  id: "box5"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 32.0
+    y: 32.0
+    z: 32.0
+    w: 32.0
+  }
+  clipping_mode: CLIPPING_MODE_STENCIL
+}
+nodes {
+  position {
+    y: -1.0
+  }
+  size {
+    x: 250.0
+    y: 350.0
+  }
+  type: TYPE_BOX
+  texture: "bg-game/body"
+  id: "box4"
+  parent: "box5"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

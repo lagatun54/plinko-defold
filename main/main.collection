@@ -1,0 +1,10 @@
+name: "main"
+scale_along_z: 0
+embedded_instances {
+  id: "go"
+  data: "components {\n"
+  "  id: \"window_game\"\n"
+  "  component: \"/entities/window_game/window_game.gui\"\n"
+  "}\n"
+  ""
+}

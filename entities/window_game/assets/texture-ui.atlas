@@ -1,0 +1,7 @@
+images {
+  image: "/entities/window_game/assets/btn_green_push.png"
+}
+images {
+  image: "/entities/window_game/assets/btn_green_normal.png"
+}
+extrude_borders: 2
