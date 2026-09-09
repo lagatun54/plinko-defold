@@ -1,0 +1,20 @@
+name: "board_outline"
+tags: "gui"
+vertex_program: "/builtins/materials/gui.vp"
+fragment_program: "/entities/plinko/materials/board_outline.fp"
+vertex_space: VERTEX_SPACE_WORLD
+vertex_constants {
+  name: "view_proj"
+  type: CONSTANT_TYPE_VIEWPROJ
+}
+fragment_constants {
+  name: "outline"
+  type: CONSTANT_TYPE_USER
+  value { x: 250.0 y: 352.0 z: 16.0 w: 1.0 }
+}
+fragment_constants {
+  name: "inner_shadow"
+  type: CONSTANT_TYPE_USER
+  value { x: 7.0 y: 0.8 z: 0.0 w: 0.0 }
+}
+max_page_count: 0

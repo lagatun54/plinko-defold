@@ -1,0 +1,75 @@
+local function update_projections(self, window_width, window_height, render_width, render_height)
+    self.world_projection = vmath.matrix4_orthographic(0, render_width, 0, render_height, -1, 1)
+    self.gui_projection = vmath.matrix4_orthographic(0, window_width, 0, window_height, -1, 1)
+end
+
+function init(self)
+    self.tile = render.predicate({"tile"})
+    self.plinko = render.predicate({"plinko"})
+    self.gui = render.predicate({"gui"})
+    if sys.get_engine_info().is_debug then
+        self.debug_text = render.predicate({"debug_text"})
+    end
+    self.clear_color = vmath.vector4(0, 0, 0, 0)
+    self.clear_color.x = sys.get_config_number("render.clear_color_red", 0)
+    self.clear_color.y = sys.get_config_number("render.clear_color_green", 0)
+    self.clear_color.z = sys.get_config_number("render.clear_color_blue", 0)
+    self.clear_color.w = sys.get_config_number("render.clear_color_alpha", 0)
+    self.clear_buffers = {
+        [graphics.BUFFER_TYPE_COLOR0_BIT] = self.clear_color,
+        [graphics.BUFFER_TYPE_DEPTH_BIT] = 1,
+        [graphics.BUFFER_TYPE_STENCIL_BIT] = 0,
+    }
+    self.world_view = vmath.matrix4()
+    self.gui_view = vmath.matrix4()
+    self.window_width = -1
+    self.window_height = -1
+    self.render_width = -1
+    self.render_height = -1
+end
+
+function update(self)
+    local window_width = render.get_window_width()
+    local window_height = render.get_window_height()
+    local render_width = render.get_width()
+    local render_height = render.get_height()
+
+    if window_width ~= self.window_width or window_height ~= self.window_height
+        or render_width ~= self.render_width or render_height ~= self.render_height then
+        self.window_width = window_width
+        self.window_height = window_height
+        self.render_width = render_width
+        self.render_height = render_height
+        update_projections(self, window_width, window_height, render_width, render_height)
+    end
+
+    render.set_render_target(render.RENDER_TARGET_DEFAULT)
+    render.set_viewport(0, 0, window_width, window_height)
+    render.set_depth_mask(true)
+    render.clear(self.clear_buffers)
+
+    render.set_view(self.world_view)
+    render.set_projection(self.world_projection)
+    render.disable_state(graphics.STATE_DEPTH_TEST)
+    render.disable_state(graphics.STATE_CULL_FACE)
+    render.disable_state(graphics.STATE_STENCIL_TEST)
+    render.enable_state(graphics.STATE_BLEND)
+    render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+    render.draw(self.tile)
+
+    render.set_view(self.gui_view)
+    render.set_projection(self.gui_projection)
+    render.enable_state(graphics.STATE_STENCIL_TEST)
+    render.draw(self.gui)
+    render.disable_state(graphics.STATE_STENCIL_TEST)
+    render.enable_state(graphics.STATE_BLEND)
+    render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+    if self.debug_text then render.draw(self.debug_text) end
+    -- Plinko objects are positioned from GUI screen coordinates. Draw them
+    -- with the same projection as the board, otherwise a wide HTML5 canvas
+    -- stretches the world pass horizontally while the GUI keeps its aspect.
+    render.set_view(self.gui_view)
+    render.set_projection(self.gui_projection)
+    render.draw(self.plinko)
+    render.disable_state(graphics.STATE_BLEND)
+end

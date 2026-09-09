@@ -1,0 +1,46 @@
+local PROP_SCALE = hash("scale")
+local PROP_TINT = hash("tint")
+
+local function set_tint(self, tint)
+    self.base_tint = tint
+    go.set("#sprite", "tint", tint)
+end
+
+local function highlight_tint(tint)
+    return vmath.vector4(
+        tint.x + (1 - tint.x) * 0.8,
+        tint.y + (1 - tint.y) * 0.8,
+        tint.z + (1 - tint.z) * 0.8,
+        tint.w
+    )
+end
+
+function init(self)
+    self.slot = nil
+    self.base_scale = go.get_scale()
+    self.base_tint = vmath.vector4(1, 1, 1, 1)
+end
+
+function on_message(self, message_id, message)
+    if message_id == hash("configure_basket") then
+        self.slot = message.slot
+        self.points = message.points
+    elseif message_id == hash("set_tint") then
+        set_tint(self, message.tint)
+    elseif message_id == hash("set_base_scale") then
+        self.base_scale = message.scale
+    elseif message_id == hash("ball_landed") then
+        go.cancel_animations(".", PROP_SCALE)
+        go.cancel_animations("#sprite", PROP_TINT)
+        go.set_scale(self.base_scale)
+        go.set("#sprite", "tint", highlight_tint(self.base_tint))
+        go.animate(".", PROP_SCALE, go.PLAYBACK_ONCE_FORWARD, vmath.vector3(
+            self.base_scale.x * 1.15, self.base_scale.y * 1.3, self.base_scale.z
+        ), go.EASING_OUTBACK, 0.09, 0, function()
+            go.animate(".", PROP_SCALE, go.PLAYBACK_ONCE_FORWARD,
+                self.base_scale, go.EASING_OUTQUAD, 0.18)
+        end)
+        go.animate("#sprite", PROP_TINT, go.PLAYBACK_ONCE_FORWARD,
+            self.base_tint, go.EASING_OUTQUAD, 0.25)
+    end
+end

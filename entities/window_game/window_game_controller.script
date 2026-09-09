@@ -1,0 +1,8 @@
+function init(self)
+    msg.post("#window_game", "configure", {
+        renderer_url = msg.url("#plinko_renderer"),
+    })
+    msg.post("#plinko_renderer", "configure", {
+        gui_url = msg.url("#window_game"),
+    })
+end

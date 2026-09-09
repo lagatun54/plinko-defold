@@ -1,0 +1,51 @@
+fonts {
+  name: "druid_text_bold"
+  font: "/druid/fonts/druid_text_bold.font"
+}
+textures {
+  name: "texture-ui"
+  texture: "/entities/plinko/assets/texture-ui.atlas"
+}
+nodes {
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 150.0
+    y: 84.0
+  }
+  type: TYPE_BOX
+  texture: "texture-ui/btn_green_normal"
+  id: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 40.0
+    y: 10.0
+    z: 40.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    y: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Button"
+  font: "druid_text_bold"
+  id: "text"
+  parent: "root"
+  inherit_alpha: true
+  outline_alpha: 0.7
+  shadow_alpha: 0.0
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

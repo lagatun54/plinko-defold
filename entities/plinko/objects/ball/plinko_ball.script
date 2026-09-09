@@ -1,0 +1,15 @@
+local SET_ANIMATION = hash("set_animation")
+local SET_ALPHA = hash("set_alpha")
+
+function init(self)
+    self.tint = vmath.vector4(1, 1, 1, 1)
+end
+
+function on_message(self, message_id, message)
+    if message_id == SET_ANIMATION then
+        sprite.play_flipbook("#sprite", message.animation)
+    elseif message_id == SET_ALPHA then
+        self.tint.w = message.alpha
+        go.set("#sprite", "tint", self.tint)
+    end
+end

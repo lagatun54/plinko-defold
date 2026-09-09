@@ -1,0 +1,13 @@
+local monarch = require "monarch.monarch"
+local druid = require("druid.druid")
+
+function init(self)
+    druid.init_window_listener()
+    msg.post("#", "show_window_game")
+end
+
+function on_message(self, message_id)
+    if message_id == hash("show_window_game") then
+        monarch.show(hash("window_game"))
+    end
+end

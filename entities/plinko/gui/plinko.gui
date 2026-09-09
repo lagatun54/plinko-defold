@@ -1,0 +1,217 @@
+script: "/entities/plinko/gui/plinko.gui_script"
+fonts {
+  name: "druid_text_bold"
+  font: "/druid/fonts/druid_text_bold.font"
+}
+textures {
+  name: "druid"
+  texture: "/druid/druid.atlas"
+}
+textures {
+  name: "texture-ui"
+  texture: "/entities/plinko/assets/texture-ui.atlas"
+}
+textures {
+  name: "bg-game"
+  texture: "/entities/plinko/assets/bg-game.atlas"
+}
+nodes {
+  size {
+    x: 300.0
+    y: 500.0
+  }
+  type: TYPE_BOX
+  id: "root"
+  adjust_mode: ADJUST_MODE_STRETCH
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  size {
+    x: 250.0
+    y: 352.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  texture: "druid/ui_circle_32"
+  id: "board"
+  parent: "root"
+  inherit_alpha: true
+  slice9 {
+    x: 16.0
+    y: 16.0
+    z: 16.0
+    w: 16.0
+  }
+  clipping_mode: CLIPPING_MODE_STENCIL
+  material: "board_mask"
+}
+nodes {
+  size {
+    x: 252.0
+    y: 355.0
+  }
+  type: TYPE_BOX
+  texture: "bg-game/body"
+  id: "board_background"
+  parent: "board"
+  inherit_alpha: true
+  material: "board_background"
+}
+nodes {
+  position {
+    x: 61.0
+    y: 162.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 220.0
+    y: 28.0
+  }
+  type: TYPE_TEXT
+  text: "Balls: 2 / 2"
+  font: "druid_text_bold"
+  id: "ball_count"
+  parent: "board"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 88.0
+    y: 144.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 220.0
+    y: 28.0
+  }
+  type: TYPE_TEXT
+  text: "01:00"
+  font: "druid_text_bold"
+  id: "timer"
+  parent: "board"
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 252.0
+    y: 354.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  id: "board_highlight"
+  parent: "root"
+  inherit_alpha: true
+  alpha: 0.3
+  material: "board_outline"
+}
+nodes {
+  position {
+    y: -205.0
+  }
+  size {
+    x: 220.0
+    y: 40.0
+  }
+  type: TYPE_BOX
+  id: "Buttons"
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    x: 76.0
+  }
+  type: TYPE_TEMPLATE
+  id: "drop_3"
+  parent: "Buttons"
+  inherit_alpha: true
+  template: "/widgets/button/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "drop_3/root"
+  parent: "drop_3"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "drop_3/text"
+  parent: "drop_3/root"
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 1.0
+  }
+  type: TYPE_TEMPLATE
+  id: "drop_2"
+  parent: "Buttons"
+  inherit_alpha: true
+  template: "/widgets/button/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "drop_2/root"
+  parent: "drop_2"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "drop_2/text"
+  parent: "drop_2/root"
+  template_node_child: true
+}
+nodes {
+  position {
+    x: -75.0
+  }
+  type: TYPE_TEMPLATE
+  id: "drop_1"
+  parent: "Buttons"
+  inherit_alpha: true
+  template: "/widgets/button/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "drop_1/root"
+  parent: "drop_1"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "drop_1/text"
+  parent: "drop_1/root"
+  template_node_child: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
+materials {
+  name: "board_outline"
+  material: "/entities/plinko/materials/board_outline.material"
+}
+materials {
+  name: "board_background"
+  material: "/entities/plinko/materials/board_background.material"
+}
+materials {
+  name: "board_mask"
+  material: "/entities/plinko/materials/board_mask.material"
+}

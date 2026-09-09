@@ -1,4 +1,0 @@
-images {
-  image: "/entities/window_game/assets/body.png"
-}
-extrude_borders: 2

@@ -1,0 +1,35 @@
+local plinko_gui = require("entities.plinko.scripts.plinko_gui")
+
+function init(self)
+    gui.set_render_order(0)
+    self.title_node = gui.get_node("title")
+    self.root_node = gui.get_node("root")
+    self.plinko_root_node = gui.get_node("plinko/root")
+    msg.post(".", "acquire_input_focus")
+    self.plinko = plinko_gui.new(self)
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("set_title") and type(message.text) == "string" then
+        gui.set_text(self.title_node, message.text)
+    elseif message_id == hash("configure") then
+        gui.set_enabled(self.root_node, true)
+        gui.set_enabled(self.plinko_root_node, true)
+        gui.set_text(self.title_node, "Plinko")
+        self.plinko:configure(message.renderer_url)
+    end
+    self.plinko:on_message(message_id, message, sender)
+end
+
+function update(self, dt)
+    self.plinko:update(dt)
+end
+
+function on_input(self, action_id, action)
+    return self.plinko:on_input(action_id, action)
+end
+
+function final(self)
+    self.plinko:final()
+    msg.post(".", "release_input_focus")
+end

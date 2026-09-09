@@ -1,0 +1,4 @@
+tile_set: "/druid/druid.atlas"
+default_animation: "ui_circle_64"
+blend_mode: BLEND_MODE_ALPHA
+  material: "/entities/plinko/materials/plinko_sprite.material"

@@ -1,0 +1,60 @@
+local PROP_SCALE = hash("scale")
+local PROP_TINT = hash("tint")
+local IMPACT_TINT = vmath.vector4(1, 1, 1, 0.9)
+local HIDDEN_TINT = vmath.vector4(1, 1, 1, 0)
+
+local function set_tint(self, tint)
+    self.base_tint = tint
+    go.set("#sprite", "tint", tint)
+end
+
+local function flash_tint(self, amount)
+    local tint = self.base_tint
+    return vmath.vector4(
+        tint.x + (1 - tint.x) * amount,
+        tint.y + (1 - tint.y) * amount,
+        tint.z + (1 - tint.z) * amount,
+        tint.w
+    )
+end
+
+local function play_impact(self)
+    go.cancel_animations(".", PROP_SCALE)
+    go.cancel_animations("#sprite", PROP_TINT)
+    go.cancel_animations("#impact_sprite", PROP_SCALE)
+    go.cancel_animations("#impact_sprite", PROP_TINT)
+
+    go.set_scale(self.base_scale)
+    go.set("#sprite", "tint", flash_tint(self, 1))
+    go.set("#impact_sprite", "scale", vmath.vector3(1, 1, 1))
+    go.set("#impact_sprite", "tint", IMPACT_TINT)
+
+    go.animate(".", PROP_SCALE, go.PLAYBACK_ONCE_FORWARD, vmath.vector3(
+        self.base_scale.x * 1.35, self.base_scale.y * 1.35, self.base_scale.z
+    ), go.EASING_OUTBACK, 0.075, 0, function()
+        go.animate(".", PROP_SCALE, go.PLAYBACK_ONCE_FORWARD,
+            self.base_scale, go.EASING_OUTQUAD, 0.16)
+    end)
+    go.animate("#sprite", PROP_TINT, go.PLAYBACK_ONCE_FORWARD,
+        self.base_tint, go.EASING_OUTQUAD, 0.20)
+    go.animate("#impact_sprite", PROP_SCALE, go.PLAYBACK_ONCE_FORWARD,
+        vmath.vector3(1.5, 1.5, 1), go.EASING_OUTQUAD, 0.22)
+    go.animate("#impact_sprite", PROP_TINT, go.PLAYBACK_ONCE_FORWARD,
+        HIDDEN_TINT, go.EASING_INQUAD, 0.22)
+end
+
+function init(self)
+    self.base_scale = go.get_scale()
+    self.base_tint = vmath.vector4(1, 1, 1, 1)
+    go.set("#impact_sprite", "tint", HIDDEN_TINT)
+end
+
+function on_message(self, message_id, message)
+    if message_id == hash("set_tint") then
+        set_tint(self, message.tint)
+    elseif message_id == hash("set_base_scale") then
+        self.base_scale = message.scale
+    elseif message_id == hash("impact") then
+        play_impact(self)
+    end
+end

@@ -1,0 +1,99 @@
+local controller = require("plinko.runtime.controller")
+local view = require("entities.plinko.scripts.plinko_render_view")
+local config = require("plinko.config.config")
+local save = require("plinko.runtime.save")
+
+local DEBUG_TEXT_MARGIN = 18
+local DEBUG_POSITION_REFRESH_INTERVAL = 0.25
+local DEBUG_TEXT_COLOR = vmath.vector4(1, 1, 1, 1)
+local DRAW_TEXT = hash("draw_text")
+local CONFIGURE = hash("configure")
+local SET_BOARD_TRANSFORM = hash("set_board_transform")
+local LAUNCH_BALL = hash("launch_ball")
+local LAUNCH_BALLS = hash("launch_balls")
+local ADD_TEST_BALL = hash("add_test_ball")
+local SET_BALL_COUNT = hash("set_ball_count")
+
+local function update_debug_text_position(position)
+    local _, height = window.get_size()
+    position.x, position.y, position.z = DEBUG_TEXT_MARGIN, height - DEBUG_TEXT_MARGIN, 0
+end
+
+local function checkpoint(self)
+    save.save(controller.snapshot(self.controller))
+end
+
+function init(self)
+    self.view = view.new(self)
+    self.controller = controller.new(self.view)
+    controller.restore(self.controller, save.load())
+    self.last_available_balls = nil
+    self.last_restore_seconds = nil
+    self.show_debug_statistics = sys.get_engine_info().is_debug
+    if self.show_debug_statistics then
+        self.debug_text_position = vmath.vector3()
+        self.debug_text_message = { text = "", position = self.debug_text_position, color = DEBUG_TEXT_COLOR }
+        self.debug_position_elapsed = DEBUG_POSITION_REFRESH_INTERVAL
+    end
+end
+
+function fixed_update(self, dt)
+    if controller.fixed_update(self.controller, dt) then
+        self.checkpoint_pending = true
+    end
+end
+
+function update(self, dt)
+    controller.update(self.controller, dt)
+    if self.checkpoint_pending then
+        self.checkpoint_pending = false
+        checkpoint(self)
+    end
+    if self.show_debug_statistics then
+        self.debug_position_elapsed = self.debug_position_elapsed + dt
+        if self.debug_position_elapsed >= DEBUG_POSITION_REFRESH_INTERVAL then
+            self.debug_position_elapsed = self.debug_position_elapsed % DEBUG_POSITION_REFRESH_INTERVAL
+            update_debug_text_position(self.debug_text_position)
+        end
+        self.debug_text_message.text = controller.get_statistics_text(self.controller)
+        msg.post("@render:", DRAW_TEXT, self.debug_text_message)
+    end
+
+    if self.gui_url then
+        local available = controller.get_available_balls(self.controller)
+        local restore_seconds = math.ceil(controller.get_restore_remaining(self.controller))
+        if available ~= self.last_available_balls or restore_seconds ~= self.last_restore_seconds then
+            self.last_available_balls = available
+            self.last_restore_seconds = restore_seconds
+            msg.post(self.gui_url, SET_BALL_COUNT, {
+                available = available,
+                maximum = config.MAX_BALLS,
+                restore_remaining = restore_seconds,
+            })
+        end
+    end
+end
+
+function on_message(self, message_id, message)
+    if message_id == CONFIGURE then
+        self.gui_url = message.gui_url
+    elseif message_id == SET_BOARD_TRANSFORM then
+        view.set_board_transform(self.view, message.position, message.scale)
+    elseif message_id == LAUNCH_BALL then
+        if controller.launch(self.controller, message.ball_type) then
+            checkpoint(self)
+        end
+    elseif message_id == LAUNCH_BALLS then
+        if #controller.launch_many(self.controller, message.ball_type) > 0 then
+            checkpoint(self)
+        end
+    elseif message_id == ADD_TEST_BALL then
+        controller.add_test_ball(self.controller)
+        checkpoint(self)
+    end
+end
+
+function final(self)
+    checkpoint(self)
+    controller.final(self.controller)
+end

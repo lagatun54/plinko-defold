@@ -1,0 +1,4 @@
+  tile_set: "/entities/plinko/assets/texture_ball.atlas"
+default_animation: "ball_2"
+blend_mode: BLEND_MODE_ALPHA
+  material: "/entities/plinko/materials/plinko_sprite.material"
