@@ -1,7 +1,7 @@
 name: "main"
 instances {
   id: "window_game_popup"
-  prototype: "/main/window_game_popup.go"
+  prototype: "/entities/window_game/window_game_popup.go"
   component_properties {
     id: "screen"
     properties {
